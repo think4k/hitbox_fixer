@@ -1052,6 +1052,15 @@ bool OnMetaAttach()
 
 	CVAR_REGISTER(&hf_hitbox_fix);
 
+	char gameDir[512];
+	GET_GAME_DIR(gameDir);
+	char* a = gameDir;
+	int i = 0;
+
+	while (gameDir[i])
+		if (gameDir[i++] == '/')
+			a = &gameDir[i];
+
 	std::string linux_game_library = "cs.so";
 	std::string game_library = "mp.dll";
 
