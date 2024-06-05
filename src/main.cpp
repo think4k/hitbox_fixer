@@ -7,7 +7,7 @@
 cvar_t* sv_unlag;
 cvar_t* sv_maxunlag;
 cvar_t* sv_unlagpush;
-cvar_t hf_hitbox_fix = { "hbf_version", APP_VERSION, FCVAR_SERVER, 0.0f, nullptr };
+cvar_t hf_hitbox_fix = { "hbf_version", "1.1.9", FCVAR_SERVER, 0.0f, NOTNULL };
 std::unique_ptr<players_api> api;
 GameType_e g_eGameType;
 extern server_studio_api_t IEngineStudio;
