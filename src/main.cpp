@@ -7,12 +7,9 @@
 cvar_t* sv_unlag;
 cvar_t* sv_maxunlag;
 cvar_t* sv_unlagpush;
-cvar_t hf_hitbox_fix = { "hbf_enabled", "1", FCVAR_SERVER | FCVAR_PROTECTED, 0.0f, NULL };
-cvar_t* phf_hitbox_fix;
-char g_ExecConfigCmd[MAX_PATH];
+cvar_t hf_hitbox_fix = { "hbf_version", APP_VERSION, FCVAR_SERVER, 0.0f, nullptr };
 std::unique_ptr<players_api> api;
 GameType_e g_eGameType;
-const char CFG_FILE[] = "hbf.cfg";
 extern server_studio_api_t IEngineStudio;
 extern studiohdr_t* g_pstudiohdr;
 extern float(*g_pRotationMatrix)[3][4];
@@ -988,35 +985,6 @@ void NormalizePath(char* path)
 	}
 }
 
-void HF_Exec_Config()
-{
-	if (!g_ExecConfigCmd[0]) {
-		return;
-	}
-
-	g_engfuncs.pfnServerCommand(g_ExecConfigCmd);
-	g_engfuncs.pfnServerExecute();
-}
-
-bool HF_Init_Config()
-{
-	const char* pszGameDir = GET_GAME_INFO(PLID, GINFO_GAMEDIR);
-	const char* pszPluginDir = GET_PLUGIN_PATH(PLID);
-
-	char szRelativePath[MAX_PATH];
-	strncpy(szRelativePath, &pszPluginDir[strlen(pszGameDir) + 1], sizeof(szRelativePath) - 1);
-	szRelativePath[sizeof(szRelativePath) - 1] = '\0';
-	NormalizePath(szRelativePath);
-
-	char* pos = strrchr(szRelativePath, '/');
-	if (pos) {
-		*(pos + 1) = '\0';
-	}
-
-	snprintf(g_ExecConfigCmd, sizeof(g_ExecConfigCmd), "exec \"%s%s\"\n", szRelativePath, CFG_FILE);
-	return true;
-}
-
 #if defined(__linux__) || defined(__APPLE__)
 void* dlsym_hook(void* __restrict __handle,
 	const char* __restrict __name)
@@ -1083,19 +1051,6 @@ bool OnMetaAttach()
 	sv_unlagpush = g_engfuncs.pfnCVarGetPointer("sv_unlagpush");
 
 	CVAR_REGISTER(&hf_hitbox_fix);
-	phf_hitbox_fix = CVAR_GET_POINTER(hf_hitbox_fix.name);
-
-	HF_Init_Config();
-	HF_Exec_Config();
-
-	char gameDir[512];
-	GET_GAME_DIR(gameDir);
-	char* a = gameDir;
-	int i = 0;
-
-	while (gameDir[i])
-		if (gameDir[i++] == '/')
-			a = &gameDir[i];
 
 	std::string linux_game_library = "cs.so";
 	std::string game_library = "mp.dll";
