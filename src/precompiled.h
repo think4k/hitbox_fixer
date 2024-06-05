@@ -61,7 +61,6 @@ extern void (UpdateClientDataPost) (const struct edict_s* ent, int sendweapons, 
 extern int	(AddToFullPackPost)(struct entity_state_s* state, int e, edict_t* ent, edict_t* host, int hostflags, int player, unsigned char* pSet);
 extern void (PutInServer)	(edict_t* pEntity);
 extern sv_blending_interface_s orig_interface;
-extern cvar_t* phf_hitbox_fix;
 void UTIL_ServerPrint(const char* fmt, ...);
 
 enum GameType_e
